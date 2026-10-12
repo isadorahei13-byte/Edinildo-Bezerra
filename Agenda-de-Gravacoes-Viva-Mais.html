@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agenda de Gravações — VIVA + Espaço de Saúde</title>
+<meta name="description" content="Escolha as datas de gravação dos vídeos do mês da VIVA + Espaço de Saúde.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: faixa navy no topo, coluna de cartões claros, roteiro que abre dentro do cartão. */
+:root{
+  color-scheme: light;
+  --papel:#F3F6FB;
+  --cartao:#FFFFFF;
+  --linha:#E2E8F1;
+  --linha-forte:#CBD5E4;
+  --navy:#0A1838;
+  --navy2:#16294F;
+  --texto:#19202C;
+  --texto2:#5C6A7D;
+  --ouro:#B57B16;
+  --ouro-claro:#E0A536;
+  --ouro-fundo:#FDF5E4;
+  --urgente:#B4421F;
+  --urgente-fundo:#FBECE6;
+  --azul:#2B55C0;
+  --azul-fundo:#EAF0FC;
+  --ok:#12714A;
+  --ok-fundo:#E6F6EE;
+  --fonte-titulo:'Space Grotesk',system-ui,sans-serif;
+  --fonte:'Outfit',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--papel)}
+body{font-family:var(--fonte);color:var(--texto);line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding-bottom:calc(116px + env(safe-area-inset-bottom,0px))}
+.pag{max-width:620px;margin:0 auto;padding-inline:16px}
+
+/* topo navy */
+.topo{background:linear-gradient(150deg,var(--navy2) 0%,var(--navy) 78%);color:#fff;
+  padding-top:env(safe-area-inset-top,0px)}
+.topo-int{max-width:620px;margin:0 auto;padding:30px 16px 32px}
+.marca{font-family:var(--fonte-titulo);font-weight:700;font-size:26px;letter-spacing:-.5px;line-height:1}
+.marca b{color:var(--ouro-claro)}
+.marca-sub{font-size:9.5px;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:6px}
+h1{font-family:var(--fonte-titulo);font-weight:700;font-size:30px;letter-spacing:-.8px;margin-top:24px;text-wrap:balance}
+h1 b{color:var(--ouro-claro)}
+.intro{font-size:15px;color:rgba(255,255,255,.80);margin-top:11px;max-width:46ch;font-weight:300}
+.intro b{color:#fff;font-weight:600}
+
+/* aviso de prazo */
+.prazo{display:flex;gap:11px;align-items:flex-start;margin-top:22px;
+  background:var(--ouro-fundo);border:1px solid #EDDCB2;border-left:4px solid var(--ouro-claro);
+  border-radius:12px;padding:13px 16px}
+.prazo .ic{font-size:15px;line-height:1.4}
+.prazo p{font-size:13.5px;color:var(--texto2);line-height:1.5}
+.prazo b{color:var(--ouro);font-weight:700}
+
+h2{font-family:var(--fonte-titulo);font-size:11.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--texto2);margin:30px 0 13px;display:flex;align-items:center;gap:11px}
+h2::after{content:'';flex:1;height:1px;background:var(--linha-forte)}
+
+/* cartão */
+.lista{display:flex;flex-direction:column;gap:13px}
+.item{background:var(--cartao);border:1px solid var(--linha);border-radius:16px;
+  padding:17px 18px 18px;box-shadow:0 1px 2px rgba(10,24,56,.04)}
+.item.feito{border-color:#9BD6B8;box-shadow:0 0 0 1px #9BD6B8}
+.item .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+.chip{font-family:var(--fonte-titulo);font-size:9.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.chip.urg{background:var(--urgente-fundo);color:var(--urgente)}
+.chip.pend{background:var(--ouro-fundo);color:var(--ouro)}
+.chip.cob{background:var(--azul-fundo);color:var(--azul)}
+.chip.pub{background:#EEF2F8;color:var(--texto2)}
+.chip.nov{background:#EDE7F9;color:#5B35A8}
+.aviso-sec{font-size:13.5px;color:var(--texto2);line-height:1.55;margin:-4px 0 13px;max-width:60ch}
+.aviso-sec b{color:var(--texto);font-weight:600}
+.erro{font-size:12.5px;color:var(--urgente);background:var(--urgente-fundo);
+  border:1px solid #F0CFC2;border-radius:10px;padding:10px 13px;margin-top:11px;line-height:1.45}
+.erro b{font-weight:700}
+.item.invalido{border-color:#EBB9A6}
+.ficha dd.janela{color:var(--azul);font-weight:600}
+.gcal{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-family:var(--fonte);
+  font-size:13px;font-weight:600;color:var(--azul);background:var(--azul-fundo);
+  border:1px solid #D4E0F7;border-radius:10px;padding:10px 14px;text-decoration:none}
+.gcal:hover{background:#DEE8FB}
+.gcal:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.acoes-item{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.acoes-item .gcal{margin-top:0}
+button.desmarcar{display:inline-flex;align-items:center;gap:8px;font-family:var(--fonte);
+  font-size:13px;font-weight:600;color:var(--urgente);background:var(--urgente-fundo);
+  border:1px solid #F0CFC2;border-radius:10px;padding:10px 14px}
+button.desmarcar:not(:disabled):hover{background:#F7DDD3}
+button.desmarcar:focus-visible{outline:2px solid var(--urgente);outline-offset:2px}
+.btn-perigo{display:inline-flex;align-items:center;background:var(--urgente);color:#fff}
+button.btn-perigo:not(:disabled):hover{background:#9A3517}
+.quem{background:var(--cartao);border:1px solid var(--linha);border-radius:14px;
+  padding:14px 16px;margin-top:18px;box-shadow:0 1px 2px rgba(10,24,56,.04)}
+.quem input{width:100%;background:#fff;color:var(--texto);font-family:var(--fonte);font-size:15px;
+  border:1px solid var(--linha-forte);border-radius:10px;padding:11px 12px}
+.quem input:focus-visible{outline:2px solid var(--ouro-claro);outline-offset:2px}
+.sinc{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12.5px;color:var(--texto2);line-height:1.4}
+.sinc .bola{width:8px;height:8px;border-radius:50%;background:var(--linha-forte);flex:none}
+.sinc.ok .bola{background:var(--ok)}
+.sinc.off .bola{background:var(--urgente)}
+.sinc.ok{color:var(--ok)}
+.marcado{font-size:12.5px;color:var(--texto2);margin-top:10px;padding-top:10px;
+  border-top:1px dashed var(--linha);line-height:1.45}
+.marcado b{color:var(--navy);font-weight:600}
+
+/* tela de pronto */
+.fundo{position:fixed;inset:0;z-index:40;background:rgba(10,24,56,.58);
+  display:flex;align-items:flex-end;justify-content:center;padding:14px}
+@media (min-width:560px){.fundo{align-items:center}}
+.pronto{background:var(--cartao);border-radius:20px;width:100%;max-width:470px;
+  max-height:86vh;overflow:auto;padding:22px 20px 18px;
+  box-shadow:0 20px 56px rgba(10,24,56,.34)}
+.pronto h3{font-family:var(--fonte-titulo);font-size:20px;font-weight:700;
+  color:var(--navy);letter-spacing:-.3px}
+.pronto .sub{font-size:13.5px;color:var(--texto2);margin-top:5px;line-height:1.5}
+.passo-p{display:flex;gap:13px;align-items:flex-start;padding:15px 0;border-top:1px solid var(--linha)}
+.passo-p:first-of-type{border-top:none;padding-top:16px}
+.bolinha{width:25px;height:25px;border-radius:50%;flex:none;display:flex;
+  align-items:center;justify-content:center;font-family:var(--fonte-titulo);
+  font-size:12px;font-weight:700;background:#E6ECF5;color:var(--texto2);margin-top:1px}
+.passo-p.feito .bolinha{background:var(--ok);color:#fff}
+.passo-p .corpo{min-width:0;flex:1}
+.passo-p .tit{font-family:var(--fonte-titulo);font-size:14.5px;font-weight:700;color:var(--navy)}
+.passo-p.feito .tit{color:var(--ok)}
+.passo-p .txt{font-size:13px;color:var(--texto2);margin-top:3px;line-height:1.45}
+.passo-p .acao{margin-top:10px}
+.btn-zap{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#06301A;
+  font-family:var(--fonte-titulo);font-weight:700;font-size:14px;border:none;border-radius:11px;
+  padding:12px 18px;cursor:pointer;text-decoration:none}
+.btn-zap:hover{background:#1FBE5B}
+.lista-agenda{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.lista-agenda .gcal{margin-top:0;font-size:12.5px;padding:9px 12px}
+.fechar{display:block;width:100%;margin-top:16px;background:transparent;color:var(--texto2);
+  font-size:13.5px;border:1px solid var(--linha-forte);border-radius:11px;padding:12px}
+.fechar:hover{background:var(--paper);color:var(--navy)}
+.item h3{font-family:var(--fonte-titulo);font-size:17.5px;font-weight:700;letter-spacing:-.3px;
+  line-height:1.25;color:var(--navy)}
+.item .desc{font-size:13.5px;color:var(--texto2);margin-top:6px;line-height:1.5}
+.item .desc b{color:var(--texto);font-weight:600}
+
+/* ficha */
+.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:11px;margin-top:14px;
+  padding-top:13px;border-top:1px solid var(--linha)}
+.ficha div{min-width:0}
+.ficha dt{font-family:var(--fonte-titulo);font-size:9.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--texto2)}
+.ficha dd{font-size:14px;margin-top:3px;font-weight:500}
+.ficha dd.limite{color:var(--ouro);font-weight:700}
+.ficha dd.limite.hoje{color:var(--urgente)}
+
+/* roteiro */
+details{margin-top:13px;border:1px solid var(--linha);border-radius:12px;overflow:hidden}
+details[open]{border-color:var(--linha-forte)}
+summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  padding:11px 14px;background:#F7F9FD;font-family:var(--fonte-titulo);
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:#EFF3F9}
+summary:focus-visible{outline:2px solid var(--ouro-claro);outline-offset:-2px}
+summary .seta{margin-left:auto;transition:transform .18s;color:var(--texto2);font-size:11px}
+details[open] summary .seta{transform:rotate(180deg)}
+.rot{padding:4px 14px 14px}
+.rot-nota{font-size:12.5px;color:var(--texto2);line-height:1.5;padding:11px 0 3px}
+.rot-nota b{color:var(--texto);font-weight:600}
+.sc{width:100%;border-collapse:collapse;font-size:13px;margin-top:9px}
+.sc th{background:var(--navy);color:#fff;text-align:left;padding:7px 10px;font-family:var(--fonte-titulo);
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.sc th:first-child{border-radius:8px 0 0 0}
+.sc th:last-child{border-radius:0 8px 0 0}
+.sc td{border-bottom:1px solid var(--linha);padding:9px 10px;vertical-align:top;line-height:1.45}
+.sc tr:last-child td{border-bottom:none}
+.sc tr:nth-child(even) td{background:#F8FAFD}
+.sc .tm{font-family:var(--fonte-titulo);font-weight:700;color:var(--ouro);white-space:nowrap;font-size:11.5px}
+.sc .qm{font-family:var(--fonte-titulo);font-weight:700;color:var(--navy);font-size:10.5px;white-space:nowrap}
+.sc .qm.tela{color:var(--azul)}
+.sc q{quotes:none;display:block;font-size:13.5px;color:var(--ouro);font-weight:600;line-height:1.4}
+.sc .ac{font-size:12px;color:var(--texto2);display:block;margin-top:4px;line-height:1.45}
+.sc .ac b{color:var(--texto)}
+.rolagem{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* campos */
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.campos.um{grid-template-columns:1fr}
+label{display:block;font-family:var(--fonte-titulo);font-size:9.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--texto2);margin-bottom:6px}
+input[type=date],input[type=time],select{width:100%;background:#fff;color:var(--texto);font-family:var(--fonte);
+  font-size:15px;border:1px solid var(--linha-forte);border-radius:10px;padding:11px 12px;appearance:none}
+input[type=date]:focus-visible,input[type=time]:focus-visible,select:focus-visible,button:focus-visible{
+  outline:2px solid var(--ouro-claro);outline-offset:2px}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--texto2) 50%),
+  linear-gradient(135deg,var(--texto2) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:36px}
+
+/* rodapé fixo */
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);border-top:1px solid var(--linha-forte);
+  padding:13px 16px calc(13px + env(safe-area-inset-bottom,0px));box-shadow:0 -2px 14px rgba(10,24,56,.06)}
+.barra-int{max-width:620px;margin:0 auto;display:flex;align-items:center;gap:13px}
+.barra .conta{font-size:12.5px;color:var(--texto2);line-height:1.35;flex:1;min-width:0}
+.barra .conta b{color:var(--navy);font-weight:700;display:block;font-family:var(--fonte-titulo);font-size:15px}
+button{font-family:var(--fonte-titulo);font-weight:700;font-size:14px;border:none;border-radius:11px;
+  padding:13px 20px;cursor:pointer;white-space:nowrap;background:var(--ouro-claro);color:var(--navy);
+  transition:background .15s,opacity .15s}
+button:disabled{opacity:.4;cursor:not-allowed}
+button:not(:disabled):hover{background:#D0942A}
+
+.recado{margin-top:30px;padding:16px 18px;background:var(--cartao);
+  border:1px dashed var(--linha-forte);border-radius:14px}
+.recado h4{font-family:var(--fonte-titulo);font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ouro);margin-bottom:7px}
+.recado p{font-size:13.5px;color:var(--texto2);line-height:1.55}
+.recado p + p{margin-top:8px}
+.recado a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+.rodape{text-align:center;font-size:12px;color:var(--texto2);padding:26px 0 8px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(14px);
+  bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ok);color:#fff;
+  font-weight:600;font-size:14px;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;max-width:88vw;text-align:center}
+.toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* abas */
+.abas{display:flex;gap:5px;background:#E6ECF5;border-radius:13px;padding:4px;margin-top:20px}
+.abas button{flex:1;background:transparent;color:var(--texto2);font-size:13.5px;
+  padding:11px 10px;border-radius:9px;letter-spacing:0}
+.abas button[aria-selected="true"]{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(10,24,56,.12)}
+.abas button:not([aria-selected="true"]):hover{background:rgba(255,255,255,.5)}
+
+/* calendário */
+.cal{background:var(--cartao);border:1px solid var(--linha);border-radius:16px;
+  padding:16px 14px 14px;margin-top:18px;box-shadow:0 1px 2px rgba(10,24,56,.04)}
+.cal-h{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;padding-inline:3px}
+.cal-h h3{font-family:var(--fonte-titulo);font-size:17px;font-weight:700;color:var(--navy)}
+.cal-h .ano{font-size:13px;color:var(--texto2);margin-left:auto}
+.grade{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.grade .dow{font-family:var(--fonte-titulo);font-size:9px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--texto2);text-align:center;padding-bottom:5px}
+.cel{aspect-ratio:1/1;border-radius:9px;border:1px solid transparent;background:#F6F8FC;
+  display:flex;flex-direction:column;align-items:center;padding:6px 2px 0;min-width:0;
+  font-family:var(--fonte);font-size:13.5px;color:var(--texto);letter-spacing:0}
+.cel.vazio{background:transparent;border:none}
+.cel.tem{background:#fff;border-color:var(--linha-forte);cursor:pointer}
+.cel.tem:hover{border-color:var(--ouro-claro)}
+.cel.sel{border-color:var(--ouro-claro);box-shadow:0 0 0 2px rgba(224,165,54,.35)}
+.cel.hoje .n{color:var(--urgente);font-weight:700}
+.cel .n{font-weight:600;line-height:1}
+.cel .pts{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.pt{width:6px;height:6px;border-radius:50%;flex:none}
+.pt.grav{background:var(--ouro-claro)}
+.pt.pub{background:var(--azul)}
+.pt.ev{background:var(--navy)}
+.legenda{display:flex;gap:15px;flex-wrap:wrap;margin-top:14px;padding-top:12px;
+  border-top:1px solid var(--linha);font-size:12px;color:var(--texto2)}
+.legenda span{display:flex;align-items:center;gap:6px}
+
+.dias{display:flex;flex-direction:column;gap:11px;margin-top:16px}
+.dia-card{background:var(--cartao);border:1px solid var(--linha);border-radius:14px;padding:13px 16px 14px}
+.dia-card.destaque{border-color:var(--ouro-claro);box-shadow:0 0 0 1px var(--ouro-claro)}
+.dia-card .cab{display:flex;align-items:baseline;gap:9px;margin-bottom:6px}
+.dia-card .num{font-family:var(--fonte-titulo);font-size:21px;font-weight:700;color:var(--navy);line-height:1}
+.dia-card .dow2{font-size:11px;color:var(--texto2);text-transform:uppercase;letter-spacing:.11em;font-weight:600}
+.ev-linha{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--linha)}
+.ev-linha .marca-tipo{font-family:var(--fonte-titulo);font-size:8.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 7px;border-radius:12px;white-space:nowrap;margin-top:1px}
+.marca-tipo.grav{background:var(--ouro-fundo);color:var(--ouro)}
+.marca-tipo.pub{background:var(--azul-fundo);color:var(--azul)}
+.marca-tipo.ev{background:#E9ECF3;color:var(--navy)}
+.ev-linha .txt{font-size:13.5px;line-height:1.45;min-width:0}
+.ev-linha .txt b{font-weight:600}
+.ev-linha .txt small{display:block;font-size:12.5px;color:var(--texto2);margin-top:2px}
+.vazio-cal{text-align:center;padding:26px 16px;color:var(--texto2);font-size:13.5px;line-height:1.55}
+.vazio-cal b{color:var(--texto);display:block;font-family:var(--fonte-titulo);font-size:15px;margin-bottom:5px}
+.limpar{display:block;margin:14px auto 0;background:transparent;color:var(--texto2);
+  font-size:12.5px;padding:8px 14px;border:1px solid var(--linha-forte);border-radius:9px}
+.limpar:hover{background:#fff;color:var(--navy)}
+
+/* no celular o roteiro vira blocos empilhados, sem arrastar pro lado */
+@media (max-width:560px){
+  .rolagem{overflow:visible}
+  .sc{min-width:0;margin-top:4px}
+  .sc thead{display:none}
+  .sc tr{display:block;border-bottom:1px solid var(--linha);padding:12px 0}
+  .sc tr:last-child{border-bottom:none}
+  .sc tr:nth-child(even) td{background:transparent}
+  .sc td{display:block;border:none;padding:0}
+  .sc td.tm,.sc td.qm{display:inline-block;vertical-align:baseline}
+  .sc td.qm{margin-left:10px}
+  .sc td:last-child{margin-top:7px}
+}
+@media (max-width:430px){
+  h1{font-size:25px}
+  .campos{grid-template-columns:1fr}
+  .barra-int{flex-direction:column;align-items:stretch;gap:10px}
+  .barra button{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-int">
+    <div class="marca">VIVA <b>+</b></div>
+    <div class="marca-sub">Espaço de Saúde</div>
+    <h1>Quando a gente<br><b>grava</b>?</h1>
+    <p class="intro">Estes são os vídeos de <b>outubro</b> que ainda faltam gravar. Escolha o dia e o horário de cada um — e abra o roteiro pra ver o que precisa ser falado.</p>
+  </div>
+</div>
+
+<div class="pag">
+
+<div class="prazo">
+  <span class="ic">⏱</span>
+  <p>Cada vídeo precisa estar gravado <b>no mínimo dois dias antes</b> da data de publicação, por causa da edição, da arte e da legenda.</p>
+</div>
+
+<div class="abas" role="tablist">
+  <button role="tab" id="aba-lista" aria-selected="true" aria-controls="painel-lista">Agendar</button>
+  <button role="tab" id="aba-cal" aria-selected="false" aria-controls="painel-cal">Calendário</button>
+</div>
+
+<section id="painel-lista" role="tabpanel" aria-labelledby="aba-lista">
+
+<div class="quem">
+  <label for="por">Quem está marcando?</label>
+  <input type="text" id="por" placeholder="Seu nome" maxlength="40" autocomplete="name">
+  <div class="sinc" id="sinc"><span class="bola"></span><span id="sinc-txt">Procurando o que já está marcado…</span></div>
+</div>
+
+<h2>Vídeos a gravar</h2>
+<div class="lista">
+
+  <div class="item" data-id="cumbuca" data-nome="Anúncio da Cumbuca Masculina" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip urg">Grava hoje</span><span class="chip pub">Publica 09/10</span></div>
+    <h3>Anúncio da Cumbuca Masculina</h3>
+    <p class="desc">Três alunos em quadra chamando a galera pro torneio do dia 16. Energia alta, gravado solto.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>3 alunos + LK gravando</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Gravar até</dt><dd class="limite hoje">Hoje, 09/10</dd></div>
+    </dl>
+
+    <details>
+      <summary>📋 Ver roteiro <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota">Vídeo de <b>32 a 36 segundos</b>. Grave <b>fala por fala</b>, não tudo de uma vez — errou, repete só aquela. Celular na vertical, altura do peito, rede ao fundo. <b>Peça pra falarem alto</b>, porque o vento come o som.</p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:74px">Tempo</th><th style="width:88px">Quem</th><th>Fala e ação</th></tr></thead>
+          <tbody>
+            <tr><td class="tm">0:00–0:03</td><td class="qm tela">Imagem</td>
+              <td><q>SEXTA, 16/10</q><span class="ac">Uma cortada forte, areia voando. Sem fala, só o som da quadra.</span></td></tr>
+            <tr><td class="tm">0:03–0:08</td><td class="qm">Aluno 1</td>
+              <td><q>"Fala, rapaziada! Tô aqui na VIVA + e tenho novidade pra vocês."</q><span class="ac">Raquete na mão, ofegante, como se tivesse acabado de jogar.</span></td></tr>
+            <tr><td class="tm">0:08–0:13</td><td class="qm">Aluno 1</td>
+              <td><q>"Sexta que vem, dia 16, tem Cumbuca Aberta Masculina aqui na nossa areia."</q><span class="ac">Aponta pra quadra ao dizer "nossa areia".</span></td></tr>
+            <tr><td class="tm">0:13–0:19</td><td class="qm">Aluno 2</td>
+              <td><q>"E é aberta mesmo, hein. Não precisa ser aluno daqui pra jogar. Vem geral."</q><span class="ac">Entra em quadro pelo lado, natural, como se estivesse passando.</span></td></tr>
+            <tr><td class="tm">0:19–0:25</td><td class="qm">Aluno 3</td>
+              <td><q>"Tem categoria pra iniciante, pra intermediário e pra avançado. Então tem jogo pra todo mundo."</q><span class="ac"><b>Confirme se o evento tem as três categorias antes de gravar.</b></span></td></tr>
+            <tr><td class="tm">0:25–0:30</td><td class="qm">Aluno 2</td>
+              <td><q>"Chama o parceiro, monta a dupla e garante a vaga no WhatsApp."</q><span class="ac">Os três já juntos no quadro aqui.</span></td></tr>
+            <tr><td class="tm">0:30–0:33</td><td class="qm">Aluno 1</td>
+              <td><q>"Ou já tá com medo de perder?"</q><span class="ac">Provocação com sorriso. Os outros riem — <b>não corte a risada</b>, é ela que faz o vídeo parecer real.</span></td></tr>
+            <tr><td class="tm">0:33–0:36</td><td class="qm tela">Fecho</td>
+              <td><q>CUMBUCA ABERTA MASCULINA · SEXTA 16/10</q><span class="ac">Parado 3 segundos. É o que a pessoa printa.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="rot-nota"><b>Se as duplas forem sorteadas:</b> troque a fala de 0:25 por <i>"E nem precisa ter dupla — o sorteio faz por você. Pode vir sozinho mesmo."</i> Essa versão é mais forte, porque derruba a maior objeção de quem quer ir e não tem com quem.</p>
+      </div>
+    </details>
+
+    <div class="campos">
+      <div><label for="d-cumbuca">Dia</label><input type="date" id="d-cumbuca" data-data></div>
+      <div><label for="h-cumbuca">Horário</label><input type="time" id="h-cumbuca" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="bota" data-nome="Bota de compressão com a Camila" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip pend">A agendar</span><span class="chip pub">Publica 13/10</span></div>
+    <h3>Bota de compressão</h3>
+    <p class="desc">A Camila explica o que é o equipamento, como é a sensação e pra quem serve. Precisa da bota ligada e de alguém usando pra fazer os closes.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>Camila</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Gravar até</dt><dd class="limite">Domingo, 11/10</dd></div>
+    </dl>
+
+    <details>
+      <summary>📋 Ver roteiro <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota">Vídeo de <b>40 a 45 segundos</b>. A Camila pode trocar as palavras pelas dela — o importante é a ordem. <b>Ela precisa validar indicações e contraindicações antes de gravar.</b></p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:74px">Tempo</th><th style="width:88px">Quem</th><th>Fala e ação</th></tr></thead>
+          <tbody>
+            <tr><td class="tm">0:00–0:04</td><td class="qm tela">Imagem</td>
+              <td><q>CHEGOU NA VIVA +</q><span class="ac">Close na bota inflando, sem fala. <b>É esse o gancho</b> — a pessoa para pra entender o que é aquilo.</span></td></tr>
+            <tr><td class="tm">0:04–0:11</td><td class="qm">Camila</td>
+              <td><q>"Você sente a perna pesada no fim do dia? Ou aquele inchaço que não passa? Chegou uma novidade aqui pra isso."</q><span class="ac">Olhando direto pra câmera, tom de conversa.</span></td></tr>
+            <tr><td class="tm">0:11–0:20</td><td class="qm">Camila</td>
+              <td><q>"Essa é a bota de compressão. Ela infla e desinfla em sequência, da ponta do pé pra cima, ajudando o corpo a drenar o líquido que fica parado."</q><span class="ac">Ao lado do equipamento, mostrando com a mão o sentido de baixo pra cima.</span></td></tr>
+            <tr><td class="tm">0:20–0:29</td><td class="qm">Camila</td>
+              <td><q>"E não dói. É uma pressão firme, tipo uma massagem. A sessão dura de vinte a trinta minutos e a pessoa sai sentindo a perna leve."</q><span class="ac"><b>É a parte mais importante.</b> "Dói?" é a primeira dúvida de quem nunca usou.</span></td></tr>
+            <tr><td class="tm">0:29–0:38</td><td class="qm">Camila</td>
+              <td><q>"Serve pra quem joga e quer recuperar depois do treino, pra quem fica muito tempo em pé e pra quem tem retenção de líquido."</q><span class="ac">Cite os três perfis, é o que faz a pessoa se reconhecer.</span></td></tr>
+            <tr><td class="tm">0:38–0:43</td><td class="qm">Camila</td>
+              <td><q>"Quer experimentar? Chama a gente no WhatsApp que a gente te explica."</q><span class="ac">Tom de convite. Nada de "agende já" — soa vendedor demais pra saúde.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="rot-nota"><b>Imagem:</b> intercale a fala com close da bota inflando e com alguém usando, com cara de relaxado. Mostrar funcionando vale mais que explicar.</p>
+      </div>
+    </details>
+
+    <div class="campos">
+      <div><label for="d-bota">Dia</label><input type="date" id="d-bota" data-data></div>
+      <div><label for="h-bota">Horário</label><input type="time" id="h-bota" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="rosa" data-nome="Outubro Rosa — Cuidar de você não é vaidade" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip pend">A agendar</span><span class="chip pub">Publica 22/10</span></div>
+    <h3>Outubro Rosa</h3>
+    <p class="desc">Fala direta pra câmera sobre prevenção e autocuidado. Precisa de alunas em aula ao fundo pra entrar por cima da fala.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>Camila ou Goreti</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Gravar até</dt><dd class="limite">Terça, 20/10</dd></div>
+    </dl>
+
+    <details>
+      <summary>📋 Ver roteiro <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota">Vídeo de <b>35 a 40 segundos</b>. Tom baixo e calmo. <b>As pausas são o roteiro</b> — é a pausa que faz a pessoa parar de rolar.</p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:74px">Tempo</th><th style="width:88px">Quem</th><th>Fala e ação</th></tr></thead>
+          <tbody>
+            <tr><td class="tm">0:00–0:06</td><td class="qm">Camila</td>
+              <td><q>"Você lembra da consulta do seu filho. Da do seu marido. Da da sua mãe."</q><span class="ac">Direto no olho da câmera, sem sorrir ainda. Nada de música alta aqui.</span></td></tr>
+            <tr><td class="tm">0:06–0:11</td><td class="qm">Camila</td>
+              <td><q>"E a sua? Quando foi a última vez?"</q><span class="ac"><b>Pausa de 1 segundo antes dessa frase.</b></span></td></tr>
+            <tr><td class="tm">0:11–0:22</td><td class="qm">Camila</td>
+              <td><q>"A gente vê isso aqui todo dia. Mulher que trabalha, cuida da casa, cuida de todo mundo — e deixa o próprio corpo pro fim da fila. Até doer."</q><span class="ac">Pode relaxar o tom, como quem conta algo do dia a dia do consultório.</span></td></tr>
+            <tr><td class="tm">0:22–0:32</td><td class="qm">Camila</td>
+              <td><q>"Outubro é o mês de lembrar disso. Marca o exame. Reserva a hora da aula. Mexe o corpo que carrega todo mundo."</q><span class="ac">Três ordens curtas, <b>uma pausa entre cada uma</b>. É o trecho que vira print.</span></td></tr>
+            <tr><td class="tm">0:32–0:38</td><td class="qm">Camila</td>
+              <td><q>"Cuidar de você não é vaidade. É saúde. E pode começar com uma aula."</q><span class="ac">Agora sim, sorriso no fim. Essa frase é o título do post — não mude.</span></td></tr>
+            <tr><td class="tm">—</td><td class="qm tela">Por cima</td>
+              <td><span class="ac">Intercale cenas de <b>mulheres reais do espaço</b> em aula — pilates, fisio, beach. A força do vídeo é serem alunas que as pessoas reconhecem.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="rot-nota"><b>O que não dizer:</b> nada sobre cirurgia, tratamento oncológico ou reabilitação pós-mastectomia. Não é o foco da Camila, e sugerir gera contato que vocês não conseguem acolher. O post fala de prevenção e movimento, só isso.</p>
+      </div>
+    </details>
+
+    <div class="campos">
+      <div><label for="d-rosa">Dia</label><input type="date" id="d-rosa" data-data></div>
+      <div><label for="h-rosa">Horário</label><input type="time" id="h-rosa" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="trucada" data-nome="Trucada — save the date de 06/11" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip pend">A agendar</span><span class="chip pub">Publica 27/10</span></div>
+    <h3>Trucada — save the date</h3>
+    <p class="desc">Começa na mesa de truco e corta pra quadra. <b>Separe um baralho antes</b> — o vídeo inteiro depende desse detalhe.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>LK + 2 alunos</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Gravar até</dt><dd class="limite">Domingo, 25/10</dd></div>
+    </dl>
+
+    <details>
+      <summary>📋 Ver roteiro <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota">Vídeo de <b>28 a 30 segundos</b>. O contraste entre a mesa e a quadra é a piada — corte seco, na batida da carta.</p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:74px">Tempo</th><th style="width:88px">Quem</th><th>Fala e ação</th></tr></thead>
+          <tbody>
+            <tr><td class="tm">0:00–0:04</td><td class="qm tela">Imagem</td>
+              <td><q>ISSO AQUI VOCÊ JÁ CONHECE…</q><span class="ac">Mesa de truco, <b>carta batendo forte</b>, a galera se xingando de brincadeira. Som ambiente alto.</span></td></tr>
+            <tr><td class="tm">0:04–0:07</td><td class="qm tela">Corte</td>
+              <td><q>…MAS E ISSO?</q><span class="ac">Corta na batida da carta direto pra quadra, trio jogando beach.</span></td></tr>
+            <tr><td class="tm">0:07–0:14</td><td class="qm">Aluno 1</td>
+              <td><q>"Dia 6 de novembro tem Trucada aqui na VIVA +. Torneio de trios, do jeito que vocês gostam."</q><span class="ac">Raquete numa mão, <b>baralho na outra</b>. Tom de desafio.</span></td></tr>
+            <tr><td class="tm">0:14–0:21</td><td class="qm">Aluno 2</td>
+              <td><q>"Monta teu trio e vem. Vai ter jogo, vai ter resenha e vai ter premiação."</q><span class="ac">Entra pelo lado do quadro. Os dois já juntos aqui.</span></td></tr>
+            <tr><td class="tm">0:21–0:25</td><td class="qm">Os dois</td>
+              <td><q>"Só não vale correr da mesa."</q><span class="ac">Provocação com risada. <b>Não corte a risada</b> — é ela que faz o vídeo circular no grupo do WhatsApp.</span></td></tr>
+            <tr><td class="tm">0:25–0:29</td><td class="qm tela">Fecho</td>
+              <td><q>TRUCADA · SEXTA 06/11 · INSCRIÇÕES NO WHATSAPP</q><span class="ac">Parado 3 segundos. É o que a pessoa manda pros amigos.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="rot-nota"><b>Confirmar antes:</b> valor da inscrição por trio, horário e como funciona a premiação. Em torneio de trios a dúvida é sempre a mesma — "quanto é por pessoa?".</p>
+      </div>
+    </details>
+
+    <div class="campos">
+      <div><label for="d-trucada">Dia</label><input type="date" id="d-trucada" data-data></div>
+      <div><label for="h-trucada">Horário</label><input type="time" id="h-trucada" data-hora></div>
+    </div>
+  </div>
+</div>
+
+<h2>Coberturas de evento</h2>
+<div class="lista">
+
+  <div class="item" data-id="cob16" data-nome="Cobertura da Cumbuca Masculina (16/10)" data-fixo>
+    <div class="chips"><span class="chip cob">Cobertura</span><span class="chip pub">Evento 16/10</span></div>
+    <h3>Cumbuca Masculina — sexta, 16/10</h3>
+    <p class="desc">Não precisa marcar horário, é durante o evento. Só precisa definir quem leva o celular.</p>
+
+    <details>
+      <summary>📋 O que gravar <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota"><b>Três coisas obrigatórias.</b> Com essas três o vídeo se monta sozinho. Tudo na <b>vertical</b> — material deitado não serve pra Reel.</p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:88px">O que</th><th>Como</th></tr></thead>
+          <tbody>
+            <tr><td class="qm">Uma jogada boa</td><td><span class="ac">De preferência em câmera lenta. É com ela que o vídeo abre.</span></td></tr>
+            <tr><td class="qm">Uma comemoração</td><td><span class="ac">Qualquer ponto disputado que termine em festa. É o que vende o clima.</span></td></tr>
+            <tr><td class="qm">A entrega do troféu</td><td><span class="ac">Segure mais tempo nessa cena. É a foto que os campeões vão querer salvar.</span></td></tr>
+            <tr><td class="qm">Se sobrar tempo</td><td><span class="ac">A galera assistindo e a resenha do pós-jogo. Serve de recheio entre uma jogada e outra.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </details>
+
+    <dl class="ficha">
+      <div><dt>Quem grava</dt><dd>LK / Felipe</dd></div>
+      <div><dt>Horário</dt><dd>Durante o evento</dd></div>
+    </dl>
+  </div>
+
+  <div class="item" data-id="cob30" data-nome="Cobertura da 4ª Fase da Liga (30/10)" data-fixo>
+    <div class="chips"><span class="chip cob">Cobertura</span><span class="chip pub">Evento 30/10</span></div>
+    <h3>4ª Fase da Liga — sexta, 30/10</h3>
+    <p class="desc">Penúltima fase da Liga Interna. A final é em 27/11.</p>
+
+    <details>
+      <summary>📋 O que gravar <span class="seta">▾</span></summary>
+      <div class="rot">
+        <p class="rot-nota">Mesmas três cenas da Cumbuca — jogada, comemoração e premiação — <b>mais uma</b>, que só existe na Liga.</p>
+        <div class="rolagem">
+        <table class="sc">
+          <thead><tr><th style="width:88px">O que</th><th>Como</th></tr></thead>
+          <tbody>
+            <tr><td class="qm">A tabela</td><td><span class="ac">Foto ou vídeo da classificação atual. <b>É o que o pessoal que está disputando mais quer ver</b> — rende mais que jogada.</span></td></tr>
+            <tr><td class="qm">Uma jogada boa</td><td><span class="ac">Em câmera lenta, se der.</span></td></tr>
+            <tr><td class="qm">Uma comemoração</td><td><span class="ac">De quem subiu na tabela, de preferência.</span></td></tr>
+            <tr><td class="qm">Quem está na frente</td><td><span class="ac">Os líderes da fase. Dá peso à final de novembro.</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </details>
+
+    <dl class="ficha">
+      <div><dt>Quem grava</dt><dd>LK / Felipe</dd></div>
+      <div><dt>Horário</dt><dd>Durante o evento</dd></div>
+    </dl>
+  </div>
+</div>
+
+
+<h2>Pra adiantar novembro</h2>
+<p class="aviso-sec">Estas quatro ainda não têm data no calendário, mas já estão combinadas pra novembro. <b>Se a equipe já estiver reunida pra gravar outra coisa, vale gravar junto</b> — sai tudo de uma vez e novembro começa com material no banco.</p>
+<div class="lista">
+
+  <div class="item" data-id="depo" data-nome="Depoimento de aluno — homem" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip nov">Novembro</span><span class="chip pub">Sem data ainda</span></div>
+    <h3>Depoimento de um aluno</h3>
+    <p class="desc">Uma pergunta só, resposta sem ensaiar: <b>"o que mudou desde que você começou aqui?"</b> O perfil fala muito com mulher e pouco com homem — esse vídeo é pra corrigir isso.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>Um aluno homem</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Roteiro</dt><dd>Sai com o calendário de novembro</dd></div>
+    </dl>
+    <div class="campos">
+      <div><label for="d-depo">Dia</label><input type="date" id="d-depo" data-data></div>
+      <div><label for="h-depo">Horário</label><input type="time" id="h-depo" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="pilates" data-nome="Pilates — exercício do dia" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip nov">Novembro</span><span class="chip pub">Sem data ainda</span></div>
+    <h3>Pilates — exercício do dia</h3>
+    <p class="desc">O pilar que menos apareceu no trimestre. Um movimento no aparelho, explicado em vinte segundos, com a frase do que ele resolve. <b>Dá pra gravar três de uma vez</b> e render o mês inteiro.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>Quem dá a aula + um aluno</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Roteiro</dt><dd>Sai com o calendário de novembro</dd></div>
+    </dl>
+    <div class="campos">
+      <div><label for="d-pilates">Dia</label><input type="date" id="d-pilates" data-data></div>
+      <div><label for="h-pilates">Horário</label><input type="time" id="h-pilates" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="humor" data-nome="Reel de humor na quadra" data-dias="1,3,5" data-de="13:00">
+    <div class="chips"><span class="chip nov">Novembro</span><span class="chip pub">Sem data ainda</span></div>
+    <h3>Reel de humor na quadra</h3>
+    <p class="desc">Aquele formato de brincadeira entre alunos, que é o que mais traz gente nova pro perfil. Grava no fim de uma aula, com quem já estiver ali.</p>
+    <dl class="ficha">
+      <div><dt>Quem precisa estar</dt><dd>2 ou 3 alunos</dd></div>
+      <div><dt>Quando dá</dt><dd class="janela">Seg, qua e sex · à tarde</dd></div>
+      <div><dt>Roteiro</dt><dd>Sai com o calendário de novembro</dd></div>
+    </dl>
+    <div class="campos">
+      <div><label for="d-humor">Dia</label><input type="date" id="d-humor" data-data></div>
+      <div><label for="h-humor">Horário</label><input type="time" id="h-humor" data-hora></div>
+    </div>
+  </div>
+
+  <div class="item" data-id="cob06" data-nome="Cobertura da Trucada (06/11)" data-fixo>
+    <div class="chips"><span class="chip cob">Cobertura</span><span class="chip pub">Evento 06/11</span></div>
+    <h3>Trucada — sexta, 06/11</h3>
+    <p class="desc">Torneio de trios. Mesmas cenas de sempre — jogada, comemoração e premiação — <b>mais a mesa de truco</b>, que é a cara do evento.</p>
+    <dl class="ficha">
+      <div><dt>Quem grava</dt><dd>LK / Felipe</dd></div>
+      <div><dt>Horário</dt><dd>Durante o evento</dd></div>
+    </dl>
+  </div>
+</div>
+
+<div class="recado">
+  <h4>Não dá em nenhum desses dias?</h4>
+  <p>Sem problema — manda no WhatsApp e a gente remarca. O que não pode é a data chegar sem aviso, porque aí o post do dia cai.</p>
+  <p>LK · <a href="#" id="wa-direto">chamar no WhatsApp</a></p>
+</div>
+
+</section>
+
+<section id="painel-cal" role="tabpanel" aria-labelledby="aba-cal" hidden>
+  <div class="cal">
+    <div class="cal-h">
+      <h3>Outubro</h3>
+      <span class="ano">2026</span>
+    </div>
+    <div class="grade" id="grade-cal"></div>
+    <div class="legenda">
+      <span><i class="pt grav"></i> Gravação marcada</span>
+      <span><i class="pt pub"></i> Publicação</span>
+      <span><i class="pt ev"></i> Evento</span>
+    </div>
+  </div>
+  <div class="dias" id="dias-cal"></div>
+  <button class="limpar" id="ver-tudo" hidden>Ver o mês todo</button>
+</section>
+
+<div class="rodape">VIVA + Espaço de Saúde · Paranavaí-PR</div>
+
+</div>
+
+<div class="barra">
+  <div class="barra-int">
+    <div class="conta"><b id="conta-n">Nada marcado ainda</b><span id="conta-t">Escolha pelo menos um dia acima</span></div>
+    <button id="enviar" disabled>Enviar confirmação</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Copiado</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var WHATSAPP = '5544997271832';   // LK, que grava
+
+  var DIAS = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+
+  function doisDig(n) { return String(n).padStart(2, '0'); }
+
+  // Nenhuma data no passado; daí pra frente, livre.
+  function hojeISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  var HOJE = hojeISO();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-data]'), function (el) {
+    el.min = HOJE;
+  });
+
+  function formatarData(iso) {
+    var p = iso.split('-');
+    if (p.length !== 3) return iso;
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    if (isNaN(d.getTime())) return iso;
+    return DIAS[d.getDay()] + ', ' + p[2] + '/' + p[1];
+  }
+
+  var NOME_DIA = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+
+  // Alguns vídeos dependem de quem aparece neles, e essa pessoa
+  // só tem certos dias e horários. A regra fica no próprio cartão.
+  function conferirJanela(item, dataISO, hora) {
+    var dias = item.getAttribute('data-dias');
+    var de = item.getAttribute('data-de');
+    if (!dias && !de) return null;
+
+    if (dias && dataISO) {
+      var p = dataISO.split('-');
+      var dow = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])).getDay();
+      var permitidos = dias.split(',').map(Number);
+      if (permitidos.indexOf(dow) === -1) {
+        return NOME_DIA[dow].charAt(0).toUpperCase() + NOME_DIA[dow].slice(1) +
+          ' não está disponível. Só ' + permitidos.map(function (d) { return NOME_DIA[d]; }).join(', ') + '.';
+      }
+    }
+    if (de && hora && hora < de) {
+      return 'Horário indisponível. A partir das ' + de + '.';
+    }
+    return null;
+  }
+
+  function mostrarErro(item, msg) {
+    var caixa = item.querySelector('.erro');
+    if (!msg) {
+      if (caixa) caixa.remove();
+      item.classList.remove('invalido');
+      return;
+    }
+    if (!caixa) {
+      caixa = document.createElement('p');
+      caixa.className = 'erro';
+      var campos = item.querySelector('.campos');
+      if (campos) campos.parentNode.insertBefore(caixa, campos.nextSibling);
+      else item.appendChild(caixa);
+    }
+    caixa.textContent = msg;
+    item.classList.add('invalido');
+  }
+
+  function coletar() {
+    var marcados = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      var id = item.getAttribute('data-id');
+      var nome = item.getAttribute('data-nome');
+      if (item.hasAttribute('data-fixo')) return;
+      var data = document.getElementById('d-' + id);
+      var hora = document.getElementById('h-' + id);
+      if (!data || !data.value) { mostrarErro(item, null); return; }
+
+      var problema = conferirJanela(item, data.value, hora ? hora.value : '');
+      mostrarErro(item, problema);
+      if (problema) return;
+
+      var t = nome + ' — ' + formatarData(data.value);
+      if (hora && hora.value) t += ', ' + hora.value;
+      marcados.push({
+        el: item,
+        txt: t,
+        nome: nome,
+        data: data.value,
+        hora: hora ? hora.value : ''
+      });
+    });
+    return marcados;
+  }
+
+  // ---------- Google Agenda ----------
+
+  function carimbo(d) {
+    return d.getFullYear() + doisDig(d.getMonth() + 1) + doisDig(d.getDate()) +
+      'T' + doisDig(d.getHours()) + doisDig(d.getMinutes()) + '00';
+  }
+
+  function linkAgenda(item) {
+    var p = item.data.split('-');
+    var titulo = 'Gravação — ' + item.nome;
+    var quemDd = item.el.querySelector('.ficha dd');
+    var quem = quemDd ? quemDd.textContent.trim() : '';
+
+    var detalhes = [];
+    if (quem) detalhes.push('Quem precisa estar: ' + quem);
+    detalhes.push('A gravação leva cerca de uma hora.');
+    detalhes.push('Roteiro e detalhes na página de agendamento da VIVA +.');
+
+    var datas;
+    if (item.hora) {
+      var h = item.hora.split(':');
+      var ini = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]), Number(h[0]), Number(h[1]));
+      var fim = new Date(ini.getTime() + 60 * 60 * 1000);
+      datas = carimbo(ini) + '/' + carimbo(fim);
+    } else {
+      // sem horário: evento de dia inteiro
+      var d1 = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      var d2 = new Date(d1.getTime() + 24 * 60 * 60 * 1000);
+      datas = d1.getFullYear() + doisDig(d1.getMonth() + 1) + doisDig(d1.getDate()) + '/' +
+              d2.getFullYear() + doisDig(d2.getMonth() + 1) + doisDig(d2.getDate());
+    }
+
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent(titulo) +
+      '&dates=' + datas +
+      '&ctz=' + encodeURIComponent('America/Sao_Paulo') +
+      '&details=' + encodeURIComponent(detalhes.join('\n')) +
+      '&location=' + encodeURIComponent('VIVA + Espaço de Saúde, Paranavaí-PR');
+  }
+
+  function cuidarDosLinks(marcados) {
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      var achado = null;
+      marcados.forEach(function (m) { if (m.el === item) achado = m; });
+      var acoes = item.querySelector('.acoes-item');
+      var link = item.querySelector('.gcal');
+      var id = item.getAttribute('data-id');
+      var data = document.getElementById('d-' + id);
+      var temData = !!(data && data.value);
+
+      // Com data escolhida (válida ou não), dá pra desmarcar.
+      if (!temData && !salvos[id]) { if (acoes) acoes.remove(); return; }
+
+      if (!acoes) {
+        acoes = document.createElement('div');
+        acoes.className = 'acoes-item';
+        var campos = item.querySelector('.campos');
+        var depois = item.querySelector('.erro') || campos;
+        if (depois) depois.parentNode.insertBefore(acoes, depois.nextSibling);
+        else item.appendChild(acoes);
+
+        var des = document.createElement('button');
+        des.type = 'button';
+        des.className = 'desmarcar';
+        des.textContent = '✕  Desmarcar gravação';
+        des.addEventListener('click', function () { pedirDesmarcar(item); });
+        acoes.appendChild(des);
+      }
+
+      if (!achado) { if (link) link.remove(); return; }
+
+      if (!link) {
+        link = document.createElement('a');
+        link.className = 'gcal';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = '📅  Adicionar ao Google Agenda';
+        acoes.insertBefore(link, acoes.firstChild);
+      }
+      link.href = linkAgenda(achado);
+    });
+  }
+
+  // ---------- desmarcar ----------
+
+  function pedirDesmarcar(item) {
+    var id = item.getAttribute('data-id');
+    var nome = item.getAttribute('data-nome');
+    var data = document.getElementById('d-' + id);
+    var hora = document.getElementById('h-' + id);
+    var reg = salvos[id] || {};
+    var dataISO = (data && data.value) || reg.data || '';
+    var horaTxt = (hora && hora.value) || reg.hora || '';
+    var quando = dataISO ? formatarData(dataISO) + (horaTxt ? ', ' + horaTxt : '') : '';
+
+    fecharPronto();
+    var fundo = document.createElement('div');
+    fundo.className = 'fundo';
+    fundo.addEventListener('click', function (e) { if (e.target === fundo) fecharPronto(); });
+
+    var cartao = document.createElement('div');
+    cartao.className = 'pronto';
+    cartao.setAttribute('role', 'dialog');
+    cartao.setAttribute('aria-modal', 'true');
+
+    var titulo = document.createElement('h3');
+    titulo.textContent = 'Desmarcar esta gravação?';
+    cartao.appendChild(titulo);
+
+    var sub = document.createElement('p');
+    sub.className = 'sub';
+    sub.textContent = nome + (quando ? ' — ' + quando : '') + '. O dia e o horário saem da página.';
+    cartao.appendChild(sub);
+
+    var acao = document.createElement('div');
+    acao.className = 'acao';
+    acao.style.marginTop = '16px';
+    var sim = document.createElement('button');
+    sim.type = 'button';
+    sim.className = 'btn-perigo';
+    sim.textContent = 'Sim, desmarcar';
+    acao.appendChild(sim);
+    cartao.appendChild(acao);
+
+    var fechar = document.createElement('button');
+    fechar.className = 'fechar';
+    fechar.type = 'button';
+    fechar.textContent = 'Cancelar';
+    fechar.addEventListener('click', fecharPronto);
+    cartao.appendChild(fechar);
+
+    sim.addEventListener('click', function () {
+      sim.disabled = true;
+      sim.textContent = 'Desmarcando…';
+      if (data) data.value = '';
+      if (hora) hora.value = '';
+      mostrarErro(item, null);
+      assinaturaEnviada = '';
+
+      apagarNoServidor(id).then(function (apagou) {
+        atualizar();
+        if (temBanco) {
+          estado(apagou ? 'ok' : 'off',
+            apagou ? 'Desmarcado — já some pra todo mundo.'
+                   : 'Não consegui desmarcar no banco. Tente de novo.');
+        }
+        mostrarDesmarcado(nome, quando, apagou);
+      });
+    });
+
+    fundo.appendChild(cartao);
+    document.body.appendChild(fundo);
+    document.addEventListener('keydown', escFecha);
+    sim.focus();
+  }
+
+  function mostrarDesmarcado(nome, quando, apagou) {
+    fecharPronto();
+    var fundo = document.createElement('div');
+    fundo.className = 'fundo';
+    fundo.addEventListener('click', function (e) { if (e.target === fundo) fecharPronto(); });
+
+    var cartao = document.createElement('div');
+    cartao.className = 'pronto';
+    cartao.setAttribute('role', 'dialog');
+    cartao.setAttribute('aria-modal', 'true');
+
+    var titulo = document.createElement('h3');
+    titulo.textContent = 'Gravação desmarcada';
+    cartao.appendChild(titulo);
+
+    var sub = document.createElement('p');
+    sub.className = 'sub';
+    sub.textContent = nome + (quando ? ' — ' + quando : '') + '.';
+    cartao.appendChild(sub);
+
+    // 1 — página
+    var p1 = passo('1',
+      temBanco ? (apagou ? 'Tirado da página' : 'Não consegui tirar do banco')
+               : 'Tirado desta tela',
+      temBanco ? (apagou ? 'Quem abrir a página já não vê mais esta gravação.'
+                         : 'Avise no grupo mesmo assim e tente desmarcar de novo depois.')
+               : 'O banco não está ligado, então avise o pessoal no grupo.');
+    if (!temBanco || apagou) p1.marcarFeito();
+    cartao.appendChild(p1);
+
+    // 2 — avisar no grupo
+    var p2 = passo('2', 'Avisar no grupo', 'Abre o WhatsApp com o aviso pronto. Escolha o grupo das gravações.');
+    var acao = document.createElement('div');
+    acao.className = 'acao';
+    var btn = document.createElement('button');
+    btn.className = 'btn-zap';
+    btn.type = 'button';
+    btn.textContent = 'Mandar no WhatsApp';
+    btn.addEventListener('click', function () {
+      abrirWhats('Agenda de gravações — VIVA + · outubro\n\n' +
+        '✕ Desmarcada: ' + nome + (quando ? ' — ' + quando : '') +
+        '\n\nVamos combinar outro dia pela página de agendamento.');
+      p2.marcarFeito('WhatsApp aberto');
+      btn.textContent = 'Abrir de novo';
+    });
+    acao.appendChild(btn);
+    p2.querySelector('.corpo').appendChild(acao);
+    cartao.appendChild(p2);
+
+    // 3 — agenda
+    var p3 = passo('3', 'Tirar da agenda',
+      'Se você já tinha posto no Google Agenda, abra o evento "Gravação — ' + nome + '" e apague.');
+    var lista = document.createElement('div');
+    lista.className = 'lista-agenda';
+    var a = document.createElement('a');
+    a.className = 'gcal';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.href = 'https://calendar.google.com/calendar/r/search?q=' +
+      encodeURIComponent('Gravação — ' + nome);
+    a.textContent = '📅  Procurar no Google Agenda';
+    a.addEventListener('click', function () { p3.marcarFeito('Agenda aberta'); });
+    lista.appendChild(a);
+    p3.querySelector('.corpo').appendChild(lista);
+    cartao.appendChild(p3);
+
+    var fechar = document.createElement('button');
+    fechar.className = 'fechar';
+    fechar.type = 'button';
+    fechar.textContent = 'Fechar';
+    fechar.addEventListener('click', fecharPronto);
+    cartao.appendChild(fechar);
+
+    fundo.appendChild(cartao);
+    document.body.appendChild(fundo);
+    document.addEventListener('keydown', escFecha);
+    btn.focus();
+  }
+
+  var botao = document.getElementById('enviar');
+  var contaN = document.getElementById('conta-n');
+  var contaT = document.getElementById('conta-t');
+  var toast = document.getElementById('toast');
+
+  var assinaturaEnviada = '';
+
+  function assinatura(m) {
+    return m.map(function (x) { return x.txt; }).join('|');
+  }
+
+  function atualizar() {
+    var m = coletar();
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      var dentro = m.some(function (x) { return x.el === item; });
+      item.classList.toggle('feito', dentro);
+    });
+    cuidarDosLinks(m);
+
+    botao.disabled = m.length === 0;
+
+    if (m.length === 0) {
+      contaN.textContent = 'Nada marcado ainda';
+      contaT.textContent = 'Escolha pelo menos um dia acima';
+      botao.textContent = 'Enviar confirmação';
+      return;
+    }
+
+    var sig = assinatura(m);
+    if (sig && sig === assinaturaEnviada) {
+      contaN.textContent = 'Confirmação enviada';
+      contaT.textContent = 'Mande no grupo também, se quiser';
+      botao.textContent = 'Abrir WhatsApp';
+    } else {
+      contaN.textContent = m.length === 1 ? '1 gravação marcada' : m.length + ' gravações marcadas';
+      contaT.textContent = 'Toque em enviar pra confirmar';
+      botao.textContent = 'Enviar confirmação';
+    }
+  }
+
+  function montarMensagem(m) {
+    var linhas = ['Agenda de gravações — VIVA + · outubro', ''];
+    m.forEach(function (x) { linhas.push('• ' + x.txt); });
+    linhas.push('', 'Combinado pela página de agendamento.');
+    return linhas.join('\n');
+  }
+
+  function mostrarToast(texto) {
+    toast.textContent = texto;
+    toast.classList.add('ver');
+    setTimeout(function () { toast.classList.remove('ver'); }, 3000);
+  }
+
+  // Sem número na URL, o WhatsApp abre perguntando pra quem mandar.
+  // Assim dá pra escolher o grupo: uma mensagem só, todo mundo recebe.
+  function abrirWhats(msg) {
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  }
+
+  function selecionar(texto) {
+    var ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); mostrarToast('Confirmação copiada'); }
+    catch (e) { mostrarToast('Copie o texto e mande no WhatsApp'); }
+    document.body.removeChild(ta);
+  }
+
+  botao.addEventListener('click', function () {
+    var m = coletar();
+    if (!m.length) return;
+    var rotulo = botao.textContent;
+    botao.disabled = true;
+    botao.textContent = temBanco ? 'Salvando…' : 'Abrindo…';
+
+    salvarNoServidor().then(function (salvou) {
+      botao.disabled = false;
+      botao.textContent = rotulo;
+      if (temBanco) {
+        estado(salvou ? 'ok' : 'off',
+          salvou ? 'Salvo — quem abrir a página vê o que você marcou.'
+                 : 'Não consegui salvar. A mensagem do WhatsApp continua valendo.');
+      }
+      assinaturaEnviada = assinatura(m);
+      atualizar();
+      abrirPronto(m, temBanco ? salvou : false);
+    });
+  });
+
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t && (t.type === 'date' || t.type === 'time')) atualizar();
+  });
+
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && (t.tagName === 'SELECT' || t.type === 'date' || t.type === 'time')) atualizar();
+  });
+
+  var waDireto = document.getElementById('wa-direto');
+  if (WHATSAPP) {
+    waDireto.href = 'https://wa.me/' + WHATSAPP;
+  } else {
+    waDireto.removeAttribute('href');
+    waDireto.textContent = '(número a preencher)';
+  }
+
+  // ---------- tela de pronto ----------
+
+  function fecharPronto() {
+    var fundo = document.querySelector('.fundo');
+    if (fundo) fundo.remove();
+    document.removeEventListener('keydown', escFecha);
+  }
+
+  function escFecha(e) {
+    if (e.key === 'Escape') fecharPronto();
+  }
+
+  function passo(numero, titulo, texto) {
+    var p = document.createElement('div');
+    p.className = 'passo-p';
+
+    var bola = document.createElement('span');
+    bola.className = 'bolinha';
+    bola.textContent = numero;
+    p.appendChild(bola);
+
+    var corpo = document.createElement('div');
+    corpo.className = 'corpo';
+    var t = document.createElement('div');
+    t.className = 'tit';
+    t.textContent = titulo;
+    corpo.appendChild(t);
+    if (texto) {
+      var sub = document.createElement('div');
+      sub.className = 'txt';
+      sub.textContent = texto;
+      corpo.appendChild(sub);
+    }
+    p.appendChild(corpo);
+
+    p.marcarFeito = function (novoTitulo) {
+      p.classList.add('feito');
+      bola.textContent = '✓';
+      if (novoTitulo) t.textContent = novoTitulo;
+    };
+    return p;
+  }
+
+  function abrirPronto(marcados, salvou) {
+    fecharPronto();
+
+    var fundo = document.createElement('div');
+    fundo.className = 'fundo';
+    fundo.addEventListener('click', function (e) {
+      if (e.target === fundo) fecharPronto();
+    });
+
+    var cartao = document.createElement('div');
+    cartao.className = 'pronto';
+    cartao.setAttribute('role', 'dialog');
+    cartao.setAttribute('aria-modal', 'true');
+
+    var titulo = document.createElement('h3');
+    titulo.textContent = marcados.length === 1
+      ? 'Falta pouco — 1 gravação'
+      : 'Falta pouco — ' + marcados.length + ' gravações';
+    cartao.appendChild(titulo);
+
+    var sub = document.createElement('p');
+    sub.className = 'sub';
+    sub.textContent = 'São três passos. O primeiro já está feito.';
+    cartao.appendChild(sub);
+
+    // 1 — salvo
+    cartao.appendChild((function () {
+      var p = passo('1',
+        salvou ? 'Salvo' : 'Não consegui salvar',
+        salvou ? 'Quem abrir a página vê o que você marcou.'
+               : 'Siga mesmo assim: o aviso no WhatsApp continua valendo.');
+      if (salvou) p.marcarFeito('Salvo');
+      return p;
+    })());
+
+    // 2 — avisar no grupo (uma mensagem, todo mundo)
+    var pAviso = passo('2', 'Avisar no grupo',
+      'Abre o WhatsApp com a mensagem pronta. Escolha o grupo das gravações e aperte enviar — chega na Isadora e no LK de uma vez.');
+    var acao = document.createElement('div');
+    acao.className = 'acao';
+
+    var btn = document.createElement('button');
+    btn.className = 'btn-zap';
+    btn.type = 'button';
+    btn.textContent = 'Mandar no WhatsApp';
+    btn.addEventListener('click', function () {
+      abrirWhats(montarMensagem(marcados));
+      pAviso.marcarFeito('WhatsApp aberto');
+      btn.textContent = 'Abrir de novo';
+    });
+    acao.appendChild(btn);
+
+    pAviso.querySelector('.corpo').appendChild(acao);
+    cartao.appendChild(pAviso);
+
+    // 3 — agenda
+    var pAgenda = passo('3', 'Pôr na agenda', 'Um por vez. Abre o Google já preenchido, é só salvar.');
+    var lista = document.createElement('div');
+    lista.className = 'lista-agenda';
+    var abertos = 0;
+    marcados.forEach(function (m) {
+      var a = document.createElement('a');
+      a.className = 'gcal';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.href = linkAgenda(m);
+      a.textContent = '📅  ' + m.nome;
+      a.addEventListener('click', function () {
+        abertos++;
+        if (abertos >= marcados.length) pAgenda.marcarFeito('Agenda aberta');
+      });
+      lista.appendChild(a);
+    });
+    pAgenda.querySelector('.corpo').appendChild(lista);
+    cartao.appendChild(pAgenda);
+
+    var fechar = document.createElement('button');
+    fechar.className = 'fechar';
+    fechar.type = 'button';
+    fechar.textContent = 'Fechar';
+    fechar.addEventListener('click', fecharPronto);
+    cartao.appendChild(fechar);
+
+    fundo.appendChild(cartao);
+    document.body.appendChild(fundo);
+    document.addEventListener('keydown', escFecha);
+    btn.focus();
+  }
+
+  // ---------- banco de dados ----------
+
+  var API = '/api/agenda';
+  var salvos = {};        // o que veio do servidor
+  var temBanco = false;
+
+  var campoPor = document.getElementById('por');
+  var sinc = document.getElementById('sinc');
+  var sincTxt = document.getElementById('sinc-txt');
+
+  function estado(classe, texto) {
+    sinc.className = 'sinc' + (classe ? ' ' + classe : '');
+    sincTxt.textContent = texto;
+  }
+
+  try {
+    var nomeGuardado = localStorage.getItem('viva-quem');
+    if (nomeGuardado) campoPor.value = nomeGuardado;
+  } catch (e) { /* navegador sem storage: tudo bem */ }
+
+  campoPor.addEventListener('input', function () {
+    try { localStorage.setItem('viva-quem', campoPor.value); } catch (e) {}
+  });
+
+  function aplicarSalvos() {
+    Object.keys(salvos).forEach(function (id) {
+      var reg = salvos[id];
+      var data = document.getElementById('d-' + id);
+      var hora = document.getElementById('h-' + id);
+      if (data && reg.data) data.value = reg.data;
+      if (hora && reg.hora) hora.value = reg.hora;
+    });
+  }
+
+  function mostrarQuemMarcou() {
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      var id = item.getAttribute('data-id');
+      var reg = salvos[id];
+      var linha = item.querySelector('.marcado');
+
+      if (!reg) { if (linha) linha.remove(); return; }
+
+      if (!linha) {
+        linha = document.createElement('p');
+        linha.className = 'marcado';
+        item.appendChild(linha);
+      }
+      var quando = '';
+      if (reg.quando) {
+        var d = new Date(reg.quando);
+        if (!isNaN(d.getTime())) {
+          quando = ' em ' + doisDig(d.getDate()) + '/' + doisDig(d.getMonth() + 1);
+        }
+      }
+      linha.textContent = reg.por
+        ? 'Marcado por ' + reg.por + quando + '.'
+        : 'Já marcado' + quando + '.';
+    });
+  }
+
+  function carregarDoServidor() {
+    if (!window.fetch) { estado('off', 'Este navegador não guarda o agendamento.'); return; }
+    fetch(API, { headers: { 'accept': 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (dados) {
+        if (!dados || !dados.ok) {
+          estado('off', 'Marcado só nesta tela — o banco ainda não está ligado.');
+          return;
+        }
+        temBanco = true;
+        salvos = dados.itens || {};
+        aplicarSalvos();
+        atualizar();
+        mostrarQuemMarcou();
+        var n = Object.keys(salvos).length;
+        estado('ok', n ? 'Tudo que está marcado aparece aqui pra todo mundo.'
+                       : 'Pronto — o que você marcar fica salvo pra todo mundo.');
+      })
+      ['catch'](function () {
+        estado('off', 'Marcado só nesta tela — não consegui falar com o banco.');
+      });
+  }
+
+  function salvarNoServidor() {
+    if (!temBanco || !window.fetch) return Promise.resolve(false);
+
+    var pacote = {};
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      if (item.hasAttribute('data-fixo')) return;
+      var id = item.getAttribute('data-id');
+      var data = document.getElementById('d-' + id);
+      var hora = document.getElementById('h-' + id);
+      if (!data) return;
+      pacote[id] = data.value
+        ? { data: data.value, hora: hora ? hora.value : '', nome: item.getAttribute('data-nome') }
+        : null;
+    });
+
+    return fetch(API, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ itens: pacote, por: campoPor.value })
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (dados) {
+        if (!dados || !dados.ok) return false;
+        salvos = dados.itens || {};
+        mostrarQuemMarcou();
+        return true;
+      })
+      ['catch'](function () { return false; });
+  }
+
+  // Manda só este vídeo, com null: o banco apaga o registro dele
+  // e deixa os outros como estão.
+  function apagarNoServidor(id) {
+    if (!temBanco || !window.fetch) {
+      delete salvos[id];
+      mostrarQuemMarcou();
+      return Promise.resolve(false);
+    }
+    var pacote = {};
+    pacote[id] = null;
+    return fetch(API, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ itens: pacote, por: campoPor.value })
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (dados) {
+        if (!dados || !dados.ok) return false;
+        salvos = dados.itens || {};
+        mostrarQuemMarcou();
+        return true;
+      })
+      ['catch'](function () { return false; });
+  }
+
+  // ---------- calendário ----------
+
+  var ANO = 2026, MES = 9;                 // outubro
+  var DOW = ['D','S','T','Q','Q','S','S'];
+  var DOW_LONGO = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+
+  var PUBLICACOES = {
+    6:  'Super 8 — melhores momentos',
+    8:  'Anúncio da Cumbuca Masculina',
+    12: 'Dia das Crianças',
+    13: 'Bota de compressão',
+    20: 'Melhores momentos da Cumbuca',
+    22: 'Outubro Rosa',
+    27: 'Trucada — save the date'
+  };
+  var EVENTOS = {
+    16: 'Cumbuca Aberta Masculina',
+    30: '4ª Fase da Liga Interna'
+  };
+  var COBERTURAS = { 16: 'LK / Felipe gravam', 30: 'LK / Felipe gravam' };
+
+  var diaSelecionado = null;
+  var foraDoMes = [];
+
+  function porDia() {
+    var mapa = {};
+    foraDoMes = [];
+
+    function add(dia, tipo, texto, sub) {
+      if (!mapa[dia]) mapa[dia] = [];
+      mapa[dia].push({ tipo: tipo, texto: texto, sub: sub || '' });
+    }
+
+    Object.keys(PUBLICACOES).forEach(function (d) {
+      add(Number(d), 'pub', PUBLICACOES[d], 'Vai pro ar neste dia');
+    });
+    Object.keys(EVENTOS).forEach(function (d) {
+      add(Number(d), 'ev', EVENTOS[d], 'Evento no espaço');
+      if (COBERTURAS[d]) add(Number(d), 'grav', 'Cobertura do evento', COBERTURAS[d]);
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.item'), function (item) {
+      var id = item.getAttribute('data-id');
+      var nome = item.getAttribute('data-nome');
+
+      if (item.hasAttribute('data-fixo')) return;
+
+      var data = document.getElementById('d-' + id);
+      var hora = document.getElementById('h-' + id);
+      if (!data || !data.value) return;
+
+      var p = data.value.split('-');
+      var sub = hora && hora.value ? 'Gravação às ' + hora.value : 'Horário a definir';
+
+      if (Number(p[0]) !== ANO || Number(p[1]) !== MES + 1) {
+        foraDoMes.push({ nome: nome, quando: formatarData(data.value), sub: sub });
+        return;
+      }
+      add(Number(p[2]), 'grav', nome, sub);
+    });
+
+    return mapa;
+  }
+
+  function tiposDe(itens) {
+    var vistos = [];
+    ['grav', 'pub', 'ev'].forEach(function (t) {
+      if (itens.some(function (i) { return i.tipo === t; })) vistos.push(t);
+    });
+    return vistos;
+  }
+
+  function renderGrade(mapa) {
+    var grade = document.getElementById('grade-cal');
+    grade.textContent = '';
+
+    DOW.forEach(function (d) {
+      var e = document.createElement('div');
+      e.className = 'dow';
+      e.textContent = d;
+      grade.appendChild(e);
+    });
+
+    var primeiro = new Date(ANO, MES, 1).getDay();
+    var total = new Date(ANO, MES + 1, 0).getDate();
+    var hoje = new Date();
+    var ehEsteMes = hoje.getFullYear() === ANO && hoje.getMonth() === MES;
+
+    for (var v = 0; v < primeiro; v++) {
+      var vazia = document.createElement('div');
+      vazia.className = 'cel vazio';
+      grade.appendChild(vazia);
+    }
+
+    for (var d = 1; d <= total; d++) {
+      var itens = mapa[d] || [];
+      var tem = itens.length > 0;
+      var cel = document.createElement(tem ? 'button' : 'div');
+      cel.className = 'cel' + (tem ? ' tem' : '');
+      if (ehEsteMes && hoje.getDate() === d) cel.classList.add('hoje');
+      if (diaSelecionado === d) cel.classList.add('sel');
+
+      var n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = String(d);
+      cel.appendChild(n);
+
+      if (tem) {
+        var pts = document.createElement('span');
+        pts.className = 'pts';
+        tiposDe(itens).forEach(function (t) {
+          var p = document.createElement('i');
+          p.className = 'pt ' + t;
+          pts.appendChild(p);
+        });
+        cel.appendChild(pts);
+        cel.type = 'button';
+        cel.setAttribute('aria-label',
+          d + ' de outubro, ' + itens.length + (itens.length === 1 ? ' item' : ' itens'));
+        (function (dia) {
+          cel.addEventListener('click', function () {
+            diaSelecionado = (diaSelecionado === dia) ? null : dia;
+            renderTudo();
+          });
+        })(d);
+      }
+      grade.appendChild(cel);
+    }
+  }
+
+  function linhaItem(it) {
+    var linha = document.createElement('div');
+    linha.className = 'ev-linha';
+
+    var marca = document.createElement('span');
+    marca.className = 'marca-tipo ' + it.tipo;
+    marca.textContent = it.tipo === 'grav' ? 'Gravar' : (it.tipo === 'pub' ? 'Publicar' : 'Evento');
+    linha.appendChild(marca);
+
+    var txt = document.createElement('div');
+    txt.className = 'txt';
+    var b = document.createElement('b');
+    b.textContent = it.texto;
+    txt.appendChild(b);
+    if (it.sub) {
+      var small = document.createElement('small');
+      small.textContent = it.sub;
+      txt.appendChild(small);
+    }
+    linha.appendChild(txt);
+    return linha;
+  }
+
+  function renderDias(mapa) {
+    var cont = document.getElementById('dias-cal');
+    var verTudo = document.getElementById('ver-tudo');
+    cont.textContent = '';
+
+    var dias = Object.keys(mapa).map(Number).sort(function (a, b) { return a - b; });
+    if (diaSelecionado) dias = dias.filter(function (d) { return d === diaSelecionado; });
+    verTudo.hidden = !diaSelecionado;
+
+    if (!dias.length) {
+      var vazio = document.createElement('div');
+      vazio.className = 'dia-card vazio-cal';
+      var t = document.createElement('b');
+      t.textContent = 'Nada neste dia';
+      vazio.appendChild(t);
+      vazio.appendChild(document.createTextNode('Escolha outro dia na grade acima.'));
+      cont.appendChild(vazio);
+      return;
+    }
+
+    dias.forEach(function (d) {
+      var card = document.createElement('div');
+      card.className = 'dia-card' + (diaSelecionado === d ? ' destaque' : '');
+
+      var cab = document.createElement('div');
+      cab.className = 'cab';
+      var num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = String(d);
+      var dow = document.createElement('span');
+      dow.className = 'dow2';
+      dow.textContent = DOW_LONGO[new Date(ANO, MES, d).getDay()] + ' · outubro';
+      cab.appendChild(num);
+      cab.appendChild(dow);
+      card.appendChild(cab);
+
+      mapa[d].forEach(function (it) { card.appendChild(linhaItem(it)); });
+      cont.appendChild(card);
+    });
+
+    if (!diaSelecionado && foraDoMes.length) {
+      var extra = document.createElement('div');
+      extra.className = 'dia-card';
+      var cab2 = document.createElement('div');
+      cab2.className = 'cab';
+      var dow2 = document.createElement('span');
+      dow2.className = 'dow2';
+      dow2.textContent = 'Fora de outubro';
+      cab2.appendChild(dow2);
+      extra.appendChild(cab2);
+      foraDoMes.forEach(function (x) {
+        extra.appendChild(linhaItem({ tipo: 'grav', texto: x.nome, sub: x.quando + ' · ' + x.sub }));
+      });
+      cont.appendChild(extra);
+    }
+  }
+
+  function renderTudo() {
+    var mapa = porDia();
+    renderGrade(mapa);
+    renderDias(mapa);
+  }
+
+  document.getElementById('ver-tudo').addEventListener('click', function () {
+    diaSelecionado = null;
+    renderTudo();
+  });
+
+  // ---------- abas ----------
+
+  var abaLista = document.getElementById('aba-lista');
+  var abaCal = document.getElementById('aba-cal');
+  var painelLista = document.getElementById('painel-lista');
+  var painelCal = document.getElementById('painel-cal');
+
+  function trocarAba(paraCal) {
+    abaCal.setAttribute('aria-selected', paraCal ? 'true' : 'false');
+    abaLista.setAttribute('aria-selected', paraCal ? 'false' : 'true');
+    painelCal.hidden = !paraCal;
+    painelLista.hidden = paraCal;
+    if (paraCal) renderTudo();
+  }
+
+  abaLista.addEventListener('click', function () { trocarAba(false); });
+  abaCal.addEventListener('click', function () { trocarAba(true); });
+
+  var atualizarBase = atualizar;
+  atualizar = function () {
+    atualizarBase();
+    if (!painelCal.hidden) renderTudo();
+  };
+
+  atualizar();
+  renderTudo();
+  carregarDoServidor();
+})();
+</script>
+</body>
+</html>

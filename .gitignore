@@ -1,0 +1,3 @@
+# Vídeos enviados e tudo o que o pipeline gera (pesado demais para o Git)
+videos/
+__pycache__/
